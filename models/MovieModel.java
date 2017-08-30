@@ -1,5 +1,7 @@
 package com.example.root.jsonparsing.models;
 
+import com.google.gson.annotations.SerializedName;
+
 import java.util.List;
 
 /**
@@ -14,6 +16,8 @@ public class MovieModel {
     private String duration;
     private String director;
     private String tagline;
+
+    @SerializedName("cast")
     private List<Cast> castList;
     private String image;
     private String story;

@@ -23,6 +23,7 @@ import android.widget.RatingBar;
 import android.widget.TextView;
 
 import com.example.root.jsonparsing.models.MovieModel;
+import com.google.gson.Gson;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
@@ -126,12 +127,12 @@ public class MainActivity extends AppCompatActivity {
                 List<MovieModel> movieModelList = new ArrayList<>();
 
 
-
+                Gson gson = new Gson();
                 for(int i=0; i<parentArray.length(); i++) {
                     JSONObject finalObject = parentArray.getJSONObject(i);
-                    MovieModel movieModel = new MovieModel();
+                    MovieModel movieModel = gson.fromJson(finalObject.toString(), MovieModel.class);
 
-                    movieModel.setMovie(finalObject.getString("movie"));
+            /*        movieModel.setMovie(finalObject.getString("movie"));
                     movieModel.setYear(finalObject.getInt("year"));
                     movieModel.setRating((float) finalObject.getDouble("rating"));
                     movieModel.setDirector(finalObject.getString("director"));
@@ -148,7 +149,7 @@ public class MainActivity extends AppCompatActivity {
                         castList.add(cast);
                     }
 
-                    movieModel.setCastList(castList);
+                    movieModel.setCastList(castList);            */
 
                     //adding the final object to the list
                     movieModelList.add(movieModel);
