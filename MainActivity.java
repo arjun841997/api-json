@@ -1,5 +1,6 @@
 package com.example.root.jsonparsing;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.media.Image;
@@ -47,12 +48,12 @@ public class MainActivity extends AppCompatActivity {
     private TextView tvData;
     private ListView lvMovies;
 
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-
 
         DisplayImageOptions defaultOptions = new DisplayImageOptions.Builder().cacheInMemory(true).cacheOnDisk(true).build();
         ImageLoaderConfiguration config = new ImageLoaderConfiguration.Builder(getApplicationContext()).defaultDisplayImageOptions(defaultOptions).build();
@@ -67,9 +68,13 @@ public class MainActivity extends AppCompatActivity {
 
 
     public class JSONTask extends AsyncTask<String, String, List<MovieModel>> {
+
+
+
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
+
         }
 
         @Override
@@ -173,6 +178,8 @@ public class MainActivity extends AppCompatActivity {
             }
             return null;
         }
+
+
     }
 
     @Override
@@ -211,34 +218,31 @@ public class MainActivity extends AppCompatActivity {
         @Override
         public View getView(int postition, View convertView, ViewGroup parent){
 
+            ViewHolder holder = null;
             if(convertView ==null){
+                holder = new ViewHolder();
                 convertView = inflater.inflate(resources,null);
+
+                holder.ivMovieIcon = (ImageView) convertView.findViewById(R.id.ivIcon);
+                holder.tvMovie = (TextView) convertView.findViewById(R.id.tvMovie);
+                holder.tvTagline = (TextView) convertView.findViewById(R.id.tvTagline);
+                holder.tvYear = (TextView) convertView.findViewById(R.id.tvYear);
+                holder.tvDuration = (TextView) convertView.findViewById(R.id.tvDuration);
+                holder.tvDirector = (TextView) convertView.findViewById(R.id.tvDirector);
+                holder.rbMovieRating = (RatingBar) convertView.findViewById(R.id.rbMovie);
+                holder.tvCast = (TextView) convertView.findViewById(R.id.tvCast);
+                holder.tvStory = (TextView) convertView.findViewById(R.id.tvStory);
+                convertView.setTag(holder);
+            }   else {
+
+                holder = (ViewHolder) convertView.getTag();
             }
 
-            ImageView ivMovieIcon;
-            TextView tvMovie;
-            TextView tvTagline;
-            TextView tvYear;
-            TextView tvDuration;
-            TextView tvDirector;
-            RatingBar rbMovieRating;
-            TextView tvCast;
-            TextView tvStory;
 
-
-            ivMovieIcon = (ImageView) convertView.findViewById(R.id.ivIcon);
-            tvMovie = (TextView) convertView.findViewById(R.id.tvMovie);
-            tvTagline = (TextView) convertView.findViewById(R.id.tvTagline);
-            tvYear = (TextView) convertView.findViewById(R.id.tvYear);
-            tvDuration = (TextView) convertView.findViewById(R.id.tvDuration);
-            tvDirector = (TextView) convertView.findViewById(R.id.tvDirector);
-            rbMovieRating = (RatingBar) convertView.findViewById(R.id.rbMovie);
-            tvCast = (TextView) convertView.findViewById(R.id.tvCast);
-            tvStory = (TextView) convertView.findViewById(R.id.tvStory);
             final ProgressBar progressBar = (ProgressBar) convertView.findViewById(R.id.progressBar);
 
             //loading images
-            ImageLoader.getInstance().displayImage(movieModelList.get(postition).getImage(), ivMovieIcon, new ImageLoadingListener() {
+            ImageLoader.getInstance().displayImage(movieModelList.get(postition).getImage(), holder.ivMovieIcon, new ImageLoadingListener() {
                 @Override
                 public void onLoadingStarted(String imageUri, View view) {
                     progressBar.setVisibility(View.VISIBLE);
@@ -261,26 +265,38 @@ public class MainActivity extends AppCompatActivity {
 
                 });
 
-            tvMovie.setText(movieModelList.get(postition).getMovie());
-            tvTagline.setText(movieModelList.get(postition).getTagline());
-            tvYear.setText("Year: " + movieModelList.get(postition).getYear());
-            tvDuration.setText("Duration: "+movieModelList.get(postition).getDuration());
-            tvDirector.setText("Director: "+movieModelList.get(postition).getDirector());
+            holder.tvMovie.setText(movieModelList.get(postition).getMovie());
+            holder.tvTagline.setText(movieModelList.get(postition).getTagline());
+            holder.tvYear.setText("Year: " + movieModelList.get(postition).getYear());
+            holder.tvDuration.setText("Duration: "+movieModelList.get(postition).getDuration());
+            holder.tvDirector.setText("Director: "+movieModelList.get(postition).getDirector());
 
             //rating bar
-            rbMovieRating.setRating(movieModelList.get(postition).getRating()/2);
+            holder.rbMovieRating.setRating(movieModelList.get(postition).getRating()/2);
 
             StringBuffer stringBuffer = new StringBuffer();
             for(MovieModel.Cast cast : movieModelList.get(postition).getCastList()){
                 stringBuffer.append(cast.getName() + ", ");
             }
 
-            tvCast.setText("Cast: "+stringBuffer);
-            tvStory.setText(movieModelList.get(postition).getStory());
+            holder.tvCast.setText("Cast: "+stringBuffer);
+            holder.tvStory.setText(movieModelList.get(postition).getStory());
 
 
 
             return convertView;
+        }
+
+        class ViewHolder{
+            private ImageView ivMovieIcon;
+            private TextView tvMovie;
+            private TextView tvTagline;
+            private TextView tvYear;
+            private  TextView tvDuration;
+            private  TextView tvDirector;
+            private   RatingBar rbMovieRating;
+            private   TextView tvCast;
+            private  TextView tvStory;
         }
 
     }
