@@ -35,7 +35,9 @@ public class MainActivity extends AppCompatActivity {
         btnHit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                new JSONTask().execute("http://192.168.43.70:3345/rr.txt");
+               // new JSONTask().execute("https://jsonparsingdemo-cec5b.firebaseapp.com/jsonData/moviesDemoItem.txt");
+                new JSONTask().execute("https://jsonparsingdemo-cec5b.firebaseapp.com/jsonData/moviesDemoList.txt");
+
             }
 
 
@@ -88,10 +90,20 @@ public class MainActivity extends AppCompatActivity {
 
                 String finalJson = buffer.toString();
                 JSONObject parentObject = new JSONObject(finalJson);
-                JSONArray parentArray = parentObject.getJSONArray("D:\\33");
+                JSONArray parentArray = parentObject.getJSONArray("movies");
+
+                StringBuffer fianlBufferedData = new StringBuffer();
+                for(int i=0; i<parentArray.length(); i++) {
+                    JSONObject finalObject = parentArray.getJSONObject(i);
 
 
-                return buffer.toString();
+                    String movieName = finalObject.getString("movie");
+                    int year = finalObject.getInt("year");
+                    fianlBufferedData.append(movieName + " - " + year + "\n");
+                }
+
+
+                return fianlBufferedData.toString();
             } catch (MalformedURLException e) {
                 e.printStackTrace();
             } catch (IOException e) {
